@@ -68,6 +68,7 @@ public class MySQLHelper extends SQLiteOpenHelper {
         }
 
         db.execSQL("INSERT INTO login VALUES (null, 'a', 1, '양현후');");
+        cursor = mdb.rawQuery("SELECT * FROM music", null); // 테이블 데이터를 읽기 위한 Cursor
         Log.i("ming", "DB");
     }
 
@@ -106,7 +107,6 @@ public class MySQLHelper extends SQLiteOpenHelper {
     // music 테이블 정보 read
     public List getTableData() {
         List mList = new ArrayList(); // 테이블 정보를 저장할 List
-        cursor = mdb.rawQuery("SELECT * FROM music", null); // 테이블 데이터를 읽기 위한 Cursor
 
         try {
             // 테이블 끝까지 읽기

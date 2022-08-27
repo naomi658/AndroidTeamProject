@@ -30,7 +30,6 @@ public class SiginUp extends AppCompatActivity {
 
         String str_id = i.getStringExtra("id");
         int int_pw = i.getIntExtra("pw", -2);
-//        int int_pwOk=i.getIntExtra("pw",-2);
         String str_name = i.getStringExtra("name");
         if (str_id != null && int_pw != 0 && str_name != null &&
                 str_id.length() > 0 && str_name.length() > 0 && int_pw > 0) {
@@ -46,7 +45,7 @@ public class SiginUp extends AppCompatActivity {
         public void onClick(View view) {
             Intent i= getIntent();
             String str_id = et_id.getText().toString();
-            int str_pw = Integer.parseInt(et_pw.getText().toString());
+            int str_pw = Integer.parseInt(et_pw.getText().  toString());
             int str_pwOk = Integer.parseInt(et_pwOk.getText().toString());
             String str_name = et_name.getText().toString();
 
