@@ -2,7 +2,6 @@ package com.example.watermelon;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
@@ -11,11 +10,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +27,7 @@ public class MySQLHelper extends SQLiteOpenHelper {
     private static String mPath = DB_PATH + TABLE_NAME;
     private final Context mContext;
 
-    String[] mp3List; // mp3 파일 저장용
+    static String[] mp3List; // mp3 파일 저장용
     String[] musicInfoArr = {
             "'에잇(Eight)', 'IU', " + R.drawable.eight + ", " + 222 + ", 'eight.mp3');",
             "'forever1', 'Girls Generation', " + R.drawable.forever_1 + ", " + 214 + ", 'forever1.mp3');",
@@ -76,23 +71,27 @@ public class MySQLHelper extends SQLiteOpenHelper {
     }
 
     // SD 카드에 파일 저장
-    void readExternalMusicFiles() {
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
-        String sdPath = path.getAbsolutePath();
+    public void readExternalMusicFiles() {
+        try{
+            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
+            String sdPath = path.getAbsolutePath();
 
-        // mp3 파일 필터링
-        // 파일 확장자 .mp3 인 것만 필터링
-        FilenameFilter filter = new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".mp3");
-            }
-        };
+            // mp3 파일 필터링
+            // 파일 확장자 .mp3 인 것만 필터링
+            FilenameFilter filter = new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".mp3");
+                }
+            };
 
-        // 외부 저장소의 기본 음악폴더에서 mp3 파일만을 배열에 저장
-        mp3List = path.list(filter);
+            // 외부 저장소의 기본 음악폴더에서 mp3 파일만을 배열에 저장
+            mp3List = path.list(filter);
 
-        getMusicTableData();
+            getMusicTableData();
+        } catch (Exception e){
+            ;
+        }
     }
 
     // music 테이블 정보 read하여 mList에 저장

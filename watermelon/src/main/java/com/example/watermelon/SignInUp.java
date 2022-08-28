@@ -41,8 +41,6 @@ public class SignInUp extends AppCompatActivity {
         mdb = mydb.getWritableDatabase();
         mCursor = mdb.rawQuery("SELECT * FROM login", null);
 
-        Intent i = getIntent();
-
         btn_setting_ok.setOnClickListener(success);
         et_name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -65,19 +63,23 @@ public class SignInUp extends AppCompatActivity {
     View.OnClickListener success = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            String str_id = et_id.getText().toString();
-            int str_pw = Integer.valueOf(et_pw.getText().toString());
-            int str_pw_sign = Integer.valueOf(et_pwOk.getText().toString());
-            String str_name = et_name.getText().toString();
+            try {
+                String str_id = et_id.getText().toString();
+                int str_pw = Integer.valueOf(et_pw.getText().toString());
+                int str_pw_sign = Integer.valueOf(et_pwOk.getText().toString());
+                String str_name = et_name.getText().toString();
 
-            //pw 같은지 확인
-            if (str_pw == str_pw_sign) {
-                mdb.execSQL("INSERT INTO login VALUES (null, '" + str_id + "', "
-                        + str_pw + ", '" + str_name + "');");
+                //pw 같은지 확인
+                if (str_pw == str_pw_sign) {
+                    mdb.execSQL("INSERT INTO login VALUES (null, '" + str_id + "', "
+                            + str_pw + ", '" + str_name + "');");
 
-                finish();
-            } else {
-                Toast.makeText(SignInUp.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(SignInUp.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                ;
             }
         }
     };

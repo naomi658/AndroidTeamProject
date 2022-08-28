@@ -1,10 +1,11 @@
 package com.example.watermelon;
 
 import android.content.Context;
-import android.util.Log;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,17 +18,47 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyView> {
     List<Music> musics;
     Context context;
 
-    public MyRecyclerAdapter(List<Music> musics){
+    // Click Event 구현하기 위한 인터페이스
+    public interface OnItemClickListener {
+        void onItemClicked(int position, String title, String artist, Bitmap imgRes);
+    }
+
+    // OnItemClickListener 참조변수 선언
+    private OnItemClickListener itemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        itemClickListener = listener;
+    }
+
+    public MyRecyclerAdapter(List<Music> musics) {
         this.musics = musics;
     }
 
     @NonNull
     @Override
     public MyView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-       context = parent.getContext();
+        context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View musicView = inflater.inflate(R.layout.layout_item, parent, false);
         MyView viewHolder = new MyView(musicView);
+
+        musicView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = "";
+                String artist = "";
+                Bitmap imgRes = null;
+
+                int position = viewHolder.getAdapterPosition();
+
+                if (position != RecyclerView.NO_POSITION) {
+                    title = viewHolder.getTitleTextView();
+                    artist = viewHolder.getArtistTextView();
+                    imgRes = viewHolder.getCoverImgView();
+                }
+                itemClickListener.onItemClicked(position, title, artist, imgRes);
+            }
+        });
 
         return viewHolder;
     }

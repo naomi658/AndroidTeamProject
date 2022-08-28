@@ -1,6 +1,5 @@
 package com.example.watermelon;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -25,8 +24,6 @@ public class Login extends AppCompatActivity {
     SQLiteDatabase mdb;
     Cursor mCursor;
     MySQLHelper mydb;
-
-    static final int RQCODE_INSERT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +67,12 @@ public class Login extends AppCompatActivity {
     View.OnClickListener lisSignIn = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(Login.this, SignInUp.class);
-            startActivity(i);
+            try{
+                Intent i = new Intent(Login.this, SignInUp.class);
+                startActivity(i);
+            } catch (Exception e){
+                ;
+            }
         }
     };
     // 로그인 버튼 리스너
