@@ -12,6 +12,8 @@
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidTeamProject">
+        <activity android:name=".ShowMyInfo"
+            android:exported="false"/>
         <activity
             android:name=".UpdateUser"
             android:exported="false" />

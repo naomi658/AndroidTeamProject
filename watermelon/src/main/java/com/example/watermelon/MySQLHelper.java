@@ -23,8 +23,10 @@ public class MySQLHelper extends SQLiteOpenHelper {
     SQLiteDatabase mdb;
     Cursor cursor;
     Music music;
+    Member member;
 
-    static ArrayList<Music> mList; // 테이블 정보를 저장할 List
+    static ArrayList<Music> mList; // music 테이블 정보를 저장할 List
+    static ArrayList<Member> logList; // login 테이블 정보를 저장할 List
     private static String DB_PATH = "";
     private static String TABLE_NAME = "music.db";
     private static String mPath = DB_PATH + TABLE_NAME;
@@ -97,11 +99,11 @@ public class MySQLHelper extends SQLiteOpenHelper {
         for (int i = 0; i < musicInfoArr.length; i++) {
             Log.i("ming", musicInfoArr[i].toString());
         }
-        getTableData();
+        getMusicTableData();
     }
 
-    // music 테이블 정보 read
-    public ArrayList getTableData() {
+    // music 테이블 정보 read하여 mList에 저장
+    public ArrayList getMusicTableData() {
         mList = new ArrayList<Music>();
 
         mdb = getReadableDatabase();
@@ -110,7 +112,7 @@ public class MySQLHelper extends SQLiteOpenHelper {
         try {
             // 테이블 끝까지 읽기
             if (cursor != null) {
-                // 다음 Row로 이동
+                // 다음 row로 이동
                 while (cursor.moveToNext()) {
                     music = new Music();
 
@@ -123,8 +125,8 @@ public class MySQLHelper extends SQLiteOpenHelper {
 
                     mList.add(music);
                 }
-                for (Music item : mList) {
-                    Log.i("musicList", item.getArtist());
+                for (Music music_item : mList) {
+                    Log.i("musicList", music_item.getArtist());
                 }
             }
         } catch (Exception e) {
@@ -132,15 +134,34 @@ public class MySQLHelper extends SQLiteOpenHelper {
         }
         return mList;
     }
-    // Load Database
-//    private void initLoadMusicDatabase(){
-//        MySQLHelper databaseHelper = new MySQLHelper(getApplicationContext());
-//        databaseHelper.OpenDatabaseFile();
-//
-//        marketList = databaseHelper.getTableData();
-//        Log.e("test", String.valueOf(marketList.size()));
-//
-//        databaseHelper.close();
-//
-//    }
+    // login 테이블 정보 read하여 logList에 저장
+    public ArrayList getLogInTableData(){
+        logList = new ArrayList<Member>();
+
+        mdb = getReadableDatabase();
+        cursor = mdb.rawQuery("SELECT * FROM login", null);
+
+        try {
+            // 테이블 끝까지 읽기
+            if (cursor != null) {
+                // 다음 row로 이동
+                while (cursor.moveToNext()) {
+                    member = new Member();
+
+                    member.setUserId(cursor.getInt(0));
+                    member.setUserStr_id(cursor.getString(1));
+                    member.setUserPw(cursor.getInt(2));
+                    member.setUserName(cursor.getString(3));
+
+                    logList.add(member);
+                }
+                for (Member member_item : logList) {
+                    Log.i("memberList", member_item.getUserName());
+                }
+            }
+        } catch (Exception e) {
+            ;
+        }
+        return logList;
+    }
 }

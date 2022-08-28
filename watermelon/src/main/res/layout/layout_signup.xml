@@ -4,13 +4,16 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="100dp">
+    android:padding="100dp"
+    android:background="@color/dark_gray">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="monospace"
         android:gravity="center"
         android:text="@string/sign_up"
+        android:textColor="@color/white"
         android:textSize="50dp" />
 
     <EditText
@@ -18,15 +21,24 @@
         android:id="@+id/sign_et_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/input_id"
+        android:backgroundTint="@color/white"
+        android:textColorHint="@color/gray"
+        android:fontFamily="monospace"
+        android:hint="@string/id"
+        android:inputType="text"
+        android:imeOptions="actionNext"
         android:textSize="10pt" />
 
     <EditText
         android:id="@+id/sign_et_pw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/input_pw"
-        android:inputType="textPassword"
+        android:hint="@string/pw"
+        android:backgroundTint="@color/white"
+        android:textColorHint="@color/gray"
+        android:fontFamily="monospace"
+        android:inputType="numberPassword"
+        android:imeOptions="actionNext"
         android:textSize="10pt" />
 
     <EditText
@@ -34,7 +46,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/input_pw_check"
-        android:inputType="textPassword"
+        android:backgroundTint="@color/white"
+        android:textColorHint="@color/gray"
+        android:fontFamily="monospace"
+        android:inputType="numberPassword"
+        android:imeOptions="actionNext"
         android:textSize="10pt" />
 
     <EditText
@@ -42,6 +58,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/input_name"
+        android:backgroundTint="@color/white"
+        android:textColorHint="@color/gray"
+        android:fontFamily="monospace"
+        android:inputType="text"
+        android:imeOptions="actionDone"
         android:textSize="10pt" />
 
     <Button
@@ -50,7 +71,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/complete_sign_up"
+        android:text="@string/sign_up"
+        android:fontFamily="monospace"
+        android:textColor="@color/white"
         android:textSize="15sp" />
 
 </LinearLayout>

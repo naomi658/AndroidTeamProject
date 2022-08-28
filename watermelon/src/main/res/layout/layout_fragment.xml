@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             app:constraint_referenced_ids="tv_title, tv_artist, card_view,
-        bottom_background_view, seekbar_player, tv_playing_time, tv_time_len" />
+        bottom_background_view" />
 
         <!-- playList(main) 화면 Group -->
         <androidx.constraintlayout.widget.Group
@@ -23,6 +23,15 @@
             android:layout_height="wrap_content"
             android:visibility="visible"
             app:constraint_referenced_ids="tv_app_name, list_view_playlist, seekbar_playlist" />
+
+        <!--하단바-->
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/bottomBar_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:constraint_referenced_ids="seekbar_playlist, play_list_image_view, tv_playing_time,
+            tv_time_len, skip_prev_image_view, img_play, skip_next_image_view" />
 
         <View
             android:id="@+id/top_background_view"
@@ -124,10 +133,6 @@
             app:show_timeout="0"/>
 
         <!-- playList(main)의 리스트 -->
-
-        <!-- play 화면의 seekBar -->
-
-
         <ListView
             android:id="@+id/list_view_playlist"
             android:layout_width="0dp"
@@ -140,6 +145,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_app_name"
             app:layout_constraintVertical_bias="0.0" />
 
+        <!-- play 화면의 seekBar -->
         <SeekBar
             android:id="@+id/seekbar_player"
             android:layout_width="0dp"
@@ -152,7 +158,8 @@
             android:thumbTint="@color/purple_700"
             app:layout_constraintBottom_toTopOf="@id/player_view"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible"/>
 
         <!-- playList(main)의 seekBar -->
         <SeekBar
@@ -178,8 +185,8 @@
             android:layout_marginTop="4dp"
             android:textColor="@color/purple_200"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/seekbar_player"
-            app:layout_constraintTop_toBottomOf="@id/seekbar_player"
+            app:layout_constraintStart_toStartOf="@id/seekbar_playlist"
+            app:layout_constraintTop_toBottomOf="@id/seekbar_playlist"
             tools:text="00:00" />
 
         <!-- play 화면의 전체 플레이 시간 -->
@@ -190,8 +197,8 @@
             android:layout_marginTop="4dp"
             android:textColor="@color/purple_200"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/seekbar_player"
-            app:layout_constraintTop_toBottomOf="@id/seekbar_player"
+            app:layout_constraintEnd_toEndOf="@id/seekbar_playlist"
+            app:layout_constraintTop_toBottomOf="@id/seekbar_playlist"
             tools:text="00:00" />
 
         <ImageView

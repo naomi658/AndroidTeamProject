@@ -1,13 +1,19 @@
 package com.example.watermelon;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -41,6 +47,23 @@ public class Login extends AppCompatActivity {
         btn_logIn.setOnClickListener(lisLogIn);
 
         Log.i("ming", "LogIn Activity is Running");
+
+        et_pw.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    try {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(et_pw.getWindowToken(), 0); // 키보드 내리기
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
     }
 
     //회원가입 버튼 리스너
@@ -48,7 +71,6 @@ public class Login extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Intent i = new Intent(Login.this, SignInUp.class);
-//                    startActivityForResult(i, RQCODE_INSERT);
             startActivity(i);
         }
     };

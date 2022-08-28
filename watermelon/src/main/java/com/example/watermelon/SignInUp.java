@@ -1,12 +1,17 @@
 package com.example.watermelon;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,6 +44,22 @@ public class SignInUp extends AppCompatActivity {
         Intent i = getIntent();
 
         btn_setting_ok.setOnClickListener(success);
+        et_name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    try {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(et_name.getWindowToken(), 0); // 키보드 내리기
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
     }
 
     View.OnClickListener success = new View.OnClickListener() {
@@ -55,7 +76,7 @@ public class SignInUp extends AppCompatActivity {
                         + str_pw + ", '" + str_name + "');");
 
                 finish();
-            } else{
+            } else {
                 Toast.makeText(SignInUp.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
             }
         }

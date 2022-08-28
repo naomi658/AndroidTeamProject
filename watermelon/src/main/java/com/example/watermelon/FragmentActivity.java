@@ -1,7 +1,9 @@
 package com.example.watermelon;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,8 +36,13 @@ public class FragmentActivity extends AppCompatActivity {
     // true: pause, false: play
     boolean play_flag = false;
 
-    MySQLHelper helper;
-    static SQLiteDatabase mdb;
+    SQLiteDatabase mdb;
+    Cursor mCursor;
+    MySQLHelper mydb;
+    SimpleCursorAdapter ca;
+
+    Intent intent;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +50,24 @@ public class FragmentActivity extends AppCompatActivity {
         fbinding = DataBindingUtil.setContentView(this, R.layout.layout_fragment);
 
         checkPermission();
+        intent = getIntent();
+
+//        mydb = new MySQLHelper(this, "music.db", null, 1);
+//        mdb = mydb.getWritableDatabase();
+//        mCursor = mdb.rawQuery("SELECT * FROM music", null); // Query
+//        String[] from = {"title", "artist"}; // 가져올 필드명
+//
+//        ca = new SimpleCursorAdapter(
+//                this,
+//                android.R.layout.simple_list_item_2,
+//                mCursor,
+//                from,
+//                new int[]{android.R.id.text1, android.R.id.text2},
+//                1);
+//        fbinding.listViewPlaylist.setAdapter(ca);
+//
+//        fbinding.listViewPlaylist.setOnItemClickListener(listener);
+
 
         // 리스트뷰 테스트용
         String str_items[] = {"eight", "That That", "forever 1", "love dive", "weller man", "off my face"};
@@ -61,9 +87,14 @@ public class FragmentActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             if (fbinding.playerViewGroup.getVisibility() == View.VISIBLE) {
-                setVisibilities(GONE, VISIBLE);
+                setVisibilities(VISIBLE, GONE, VISIBLE);
             } else {
-                setVisibilities(VISIBLE, GONE);
+                setVisibilities(GONE, VISIBLE, VISIBLE);
+                int pos = intent.getIntExtra("itemPos", -1);
+                Music musicListPos = MySQLHelper.mList.get(pos);
+                int imgRes = musicListPos.getImg_file();
+
+                fbinding.playListImageView.setImageResource(imgRes);
             }
         }
     };
@@ -86,7 +117,8 @@ public class FragmentActivity extends AppCompatActivity {
     AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            setVisibilities(GONE, VISIBLE);
+            setVisibilities(GONE, VISIBLE, VISIBLE);
+            intent.putExtra("itemPos", position);
         }
     };
 
@@ -94,6 +126,12 @@ public class FragmentActivity extends AppCompatActivity {
     void setVisibilities(int list, int playerView) {
         fbinding.listGroup.setVisibility(list);
         fbinding.playerViewGroup.setVisibility(playerView);
+    }
+
+    void setVisibilities(int list, int playerView, int bottom) {
+        fbinding.listGroup.setVisibility(list);
+        fbinding.playerViewGroup.setVisibility(playerView);
+        fbinding.bottomBarGroup.setVisibility(bottom);
     }
 
     // 사용권한을 확인하고 필요 시 요청
@@ -128,7 +166,7 @@ public class FragmentActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == REQCODE_PERMISSION_WRITE_EXTERNAL) {
-            if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)){
+            if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 new MySQLHelper(FragmentActivity.this, "music.db", null, 1);
             }
         }

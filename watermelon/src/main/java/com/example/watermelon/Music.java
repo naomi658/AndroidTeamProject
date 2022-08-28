@@ -1,6 +1,12 @@
 package com.example.watermelon;
 
-// DB 내용 getter, setter
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+// DB의 music 테이블 내용 getter, setter
 public class Music {
     public int id, img_file, playtime;
     public String title, artist, filename;
@@ -20,4 +26,7 @@ public class Music {
     public int getImg_file(){ return this.img_file; }
     public int getPlaytime(){ return this.playtime; }
     public String getFilename(){ return this.filename; }
+
+    SQLiteDatabase mydb;
+    Cursor cursor;
 }
