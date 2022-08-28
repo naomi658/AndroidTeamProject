@@ -1,5 +1,6 @@
 package com.example.watermelon;
 
+// DB 내용 getter, setter
 public class Music {
     public int id, img_file, playtime;
     public String title, artist, filename;

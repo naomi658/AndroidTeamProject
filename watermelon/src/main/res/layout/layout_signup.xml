@@ -2,83 +2,55 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
-    android:padding="20dp">
+    android:orientation="vertical"
+    android:padding="100dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="회원 가입"
-        android:textSize="50dp"
         android:gravity="center"
-        />
-    <LinearLayout
+        android:text="@string/sign_up"
+        android:textSize="50dp" />
+
+    <EditText
+        android:layout_marginTop="50dp"
+        android:id="@+id/sign_et_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:hint="@string/input_id"
+        android:textSize="10pt" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/et_id"
-            android:hint="아이디 입력"
-            android:textSize="30sp"
-
-            />
-    </LinearLayout>
-
-    <LinearLayout
+    <EditText
+        android:id="@+id/sign_et_pw"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:hint="@string/input_pw"
+        android:inputType="textPassword"
+        android:textSize="10pt" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/et_pw"
-            android:inputType="textPassword"
-            android:hint="비밀번호 입력"
-            android:textSize="30sp"
-            />
-    </LinearLayout>
-
-    <LinearLayout
+    <EditText
+        android:id="@+id/sign_et_pw_ok"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:hint="@string/input_pw_check"
+        android:inputType="textPassword"
+        android:textSize="10pt" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/et_pwok"
-            android:inputType="textPassword"
-            android:hint="비밀번호 재확인"
-            android:textSize="30sp"
-            />
-    </LinearLayout>
-
-    <LinearLayout
+    <EditText
+        android:id="@+id/sign_et_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/et_name"
-            android:hint="이름"
-            android:textSize="30sp"
-            />
-    </LinearLayout>
+        android:hint="@string/input_name"
+        android:textSize="10pt" />
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         android:id="@+id/btn_success"
-        android:text="가입 완료"
-        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        />
+        android:text="@string/complete_sign_up"
+        android:textSize="15sp" />
 
 </LinearLayout>

@@ -19,6 +19,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.example.watermelon.databinding.LayoutFragmentBinding;
 
+// 메인화면(플레이리스트)
 public class FragmentActivity extends AppCompatActivity {
     private static final int REQCODE_PERMISSION_WRITE_EXTERNAL = 1;
     private LayoutFragmentBinding fbinding;

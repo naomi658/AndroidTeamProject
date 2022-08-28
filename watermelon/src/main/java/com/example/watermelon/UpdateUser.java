@@ -8,6 +8,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+// 업데이트
 public class UpdateUser extends AppCompatActivity {
     SQLiteDatabase mdb;
     Cursor mCursor;
