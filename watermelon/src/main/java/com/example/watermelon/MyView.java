@@ -29,9 +29,7 @@ public class MyView extends RecyclerView.ViewHolder {
         return this.artist.getText().toString();
     }
     public Bitmap getCoverImgView(){
-//        return this.coverImg.getDrawable();
         BitmapDrawable bitmapDrawable = (BitmapDrawable) this.coverImg.getDrawable();
-
         return bitmapDrawable.getBitmap();
     }
 }

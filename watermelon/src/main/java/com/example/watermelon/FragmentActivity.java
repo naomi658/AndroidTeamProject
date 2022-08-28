@@ -1,11 +1,9 @@
 package com.example.watermelon;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -39,7 +37,6 @@ public class FragmentActivity extends AppCompatActivity {
     boolean play_flag = false;
 
     MyRecyclerAdapter musicAdapter;
-    Intent intent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,20 +73,7 @@ public class FragmentActivity extends AppCompatActivity {
             Log.i("pos", position + "\t" + imgRes);
         }
     };
-//    View.OnContextClickListener recyclerListener = new View.OnContextClickListener() {
-//        @Override
-//        public boolean onContextClick(View v) {
-//
-//            setVisibilities(GONE, VISIBLE, VISIBLE);
-//            int pos = fbinding.recyclerPlaylist.getChildAdapterPosition(v);
-//            Log.i("pos", pos+"");
-//
-//            intent = new Intent(FragmentActivity.this, PlaySongActivity.class);
-//            startActivityForResult(intent, REQ_PLAY_SONG);
-//
-//            return false;
-//        }
-//    };
+
     // playListImageView Click Listener
     View.OnClickListener lisList = new View.OnClickListener() {
         @Override

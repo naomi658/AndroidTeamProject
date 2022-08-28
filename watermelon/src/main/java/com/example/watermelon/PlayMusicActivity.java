@@ -6,7 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class PlaySongActivity extends AppCompatActivity {
+public class PlayMusicActivity extends AppCompatActivity {
     private String title;
     private String artist;
     private String coverImg;
@@ -18,6 +18,5 @@ public class PlaySongActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FragmentActivity.setVisibilities(View.GONE, View.VISIBLE, View.VISIBLE);
     }
 }
