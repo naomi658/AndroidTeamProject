@@ -4,8 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/naomi/Desktop/AndroidTeamProject/watermelon/src/main/res/layout/activity_main.xml" value="0.27395833333333336" />
+        <entry key="..\:/Users/naomi/Desktop/AndroidTeamProject/watermelon/src/main/res/layout/activity_splash.xml" value="0.1" />
         <entry key="..\:/Users/naomi/Desktop/AndroidTeamProject/watermelon/src/main/res/layout/activity_success_login.xml" value="0.16485507246376813" />
-        <entry key="..\:/Users/naomi/Desktop/AndroidTeamProject/watermelon/src/main/res/layout/layout_fragment.xml" value="0.264" />
+        <entry key="..\:/Users/naomi/Desktop/AndroidTeamProject/watermelon/src/main/res/layout/layout_fragment.xml" value="0.1" />
+        <entry key="..\:/Users/naomi/Desktop/AndroidTeamProject/watermelon/src/main/res/layout/layout_item.xml" value="0.1" />
         <entry key="..\:/Users/naomi/Desktop/AndroidTeamProject/watermelon/src/main/res/layout/layout_login.xml" value="0.16799999999999998" />
         <entry key="..\:/Users/naomi/Desktop/AndroidTeamProject/watermelon/src/main/res/layout/layout_my_info.xml" value="0.10597826086956522" />
         <entry key="..\:/Users/naomi/Desktop/AndroidTeamProject/watermelon/src/main/res/layout/layout_signup.xml" value="0.264" />

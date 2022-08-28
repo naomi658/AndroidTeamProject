@@ -31,6 +31,9 @@ android {
 }
 
 dependencies {
+    // To use RecyclerView
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
     // To use ExoPlayer library
     implementation 'com.google.android.exoplayer:exoplayer-core:2.18.1'
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.18.1'

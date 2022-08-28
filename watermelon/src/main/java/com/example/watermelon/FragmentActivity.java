@@ -17,9 +17,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.watermelon.databinding.LayoutFragmentBinding;
 
@@ -36,45 +39,21 @@ public class FragmentActivity extends AppCompatActivity {
     // true: pause, false: play
     boolean play_flag = false;
 
-    SQLiteDatabase mdb;
-    Cursor mCursor;
-    MySQLHelper mydb;
-    SimpleCursorAdapter ca;
-
+    MyRecyclerAdapter musicAdapter;
     Intent intent;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fbinding = DataBindingUtil.setContentView(this, R.layout.layout_fragment);
-
         checkPermission();
         intent = getIntent();
 
-//        mydb = new MySQLHelper(this, "music.db", null, 1);
-//        mdb = mydb.getWritableDatabase();
-//        mCursor = mdb.rawQuery("SELECT * FROM music", null); // Query
-//        String[] from = {"title", "artist"}; // 가져올 필드명
-//
-//        ca = new SimpleCursorAdapter(
-//                this,
-//                android.R.layout.simple_list_item_2,
-//                mCursor,
-//                from,
-//                new int[]{android.R.id.text1, android.R.id.text2},
-//                1);
-//        fbinding.listViewPlaylist.setAdapter(ca);
-//
-//        fbinding.listViewPlaylist.setOnItemClickListener(listener);
-
-
-        // 리스트뷰 테스트용
-        String str_items[] = {"eight", "That That", "forever 1", "love dive", "weller man", "off my face"};
-        ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.layout.row, R.id.tv, str_items);
-        ListView lv = findViewById(R.id.list_view_playlist);
-        lv.setAdapter(aa);
-        lv.setOnItemClickListener(listener);
+        MySQLHelper helper = new MySQLHelper(FragmentActivity.this, "music.db", null, 1);
+//        // 뮤직파일 어댑터에 세팅
+        musicAdapter = new MyRecyclerAdapter(helper.mList);
+        fbinding.recyclerPlaylist.setAdapter(musicAdapter);
+        fbinding.recyclerPlaylist.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         // play 이미지 클릭시
         fbinding.imgPlay.setOnClickListener(lisImg);
@@ -167,7 +146,11 @@ public class FragmentActivity extends AppCompatActivity {
 
         if (requestCode == REQCODE_PERMISSION_WRITE_EXTERNAL) {
             if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                new MySQLHelper(FragmentActivity.this, "music.db", null, 1);
+                new MySQLHelper(FragmentActivity.this, "music.db", null, 1).readExternalMusicFiles();
+
+//                musicAdapter = new MyRecyclerAdapter(MySQLHelper.mList);
+//                fbinding.recyclerPlaylist.setAdapter(musicAdapter);
+//                fbinding.recyclerPlaylist.setLayoutManager(new LinearLayoutManager(this));
             }
         }
     }

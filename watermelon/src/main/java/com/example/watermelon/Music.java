@@ -26,7 +26,4 @@ public class Music {
     public int getImg_file(){ return this.img_file; }
     public int getPlaytime(){ return this.playtime; }
     public String getFilename(){ return this.filename; }
-
-    SQLiteDatabase mydb;
-    Cursor cursor;
 }

@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="visible"
-            app:constraint_referenced_ids="tv_app_name, list_view_playlist, seekbar_playlist" />
+            app:constraint_referenced_ids="tv_app_name, recycler_playlist, seekbar_playlist" />
 
         <!--하단바-->
         <androidx.constraintlayout.widget.Group
@@ -112,7 +112,6 @@
             app:layout_constraintDimensionRatio="H,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
-
             <ImageView
                 android:id="@+id/img_cover"
                 android:layout_width="match_parent"
@@ -132,18 +131,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:show_timeout="0"/>
 
-        <!-- playList(main)의 리스트 -->
-        <ListView
-            android:id="@+id/list_view_playlist"
+        <!-- playList(main)의 recyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_playlist"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintBottom_toTopOf="@id/player_view"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_app_name"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@id/tv_app_name"/>
 
         <!-- play 화면의 seekBar -->
         <SeekBar

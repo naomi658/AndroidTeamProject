@@ -25,8 +25,8 @@ public class MySQLHelper extends SQLiteOpenHelper {
     Music music;
     Member member;
 
-    static ArrayList<Music> mList; // music 테이블 정보를 저장할 List
-    static ArrayList<Member> logList; // login 테이블 정보를 저장할 List
+    static List<Music> mList; // music 테이블 정보를 저장할 List
+    static List<Member> logList; // login 테이블 정보를 저장할 List
     private static String DB_PATH = "";
     private static String TABLE_NAME = "music.db";
     private static String mPath = DB_PATH + TABLE_NAME;
@@ -92,18 +92,11 @@ public class MySQLHelper extends SQLiteOpenHelper {
         // 외부 저장소의 기본 음악폴더에서 mp3 파일만을 배열에 저장
         mp3List = path.list(filter);
 
-        for (int i = 0; i < mp3List.length; i++) {
-            Log.i("ming", mp3List[i]);
-        }
-
-        for (int i = 0; i < musicInfoArr.length; i++) {
-            Log.i("ming", musicInfoArr[i].toString());
-        }
         getMusicTableData();
     }
 
     // music 테이블 정보 read하여 mList에 저장
-    public ArrayList getMusicTableData() {
+    public List getMusicTableData() {
         mList = new ArrayList<Music>();
 
         mdb = getReadableDatabase();
@@ -135,7 +128,7 @@ public class MySQLHelper extends SQLiteOpenHelper {
         return mList;
     }
     // login 테이블 정보 read하여 logList에 저장
-    public ArrayList getLogInTableData(){
+    public List getLogInTableData(){
         logList = new ArrayList<Member>();
 
         mdb = getReadableDatabase();
