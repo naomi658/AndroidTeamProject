@@ -63,7 +63,6 @@ public class MySQLHelper extends SQLiteOpenHelper {
         }
 
         db.execSQL("INSERT INTO login VALUES (null, 'a', 1, '양현후');");
-        db.execSQL("INSERT INTO login VALUES (null, 'b', 2, '이민영');");
 
         Log.i("ming", "DB");
     }
