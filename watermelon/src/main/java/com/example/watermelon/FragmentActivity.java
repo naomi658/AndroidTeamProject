@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -115,6 +116,9 @@ public class FragmentActivity extends AppCompatActivity {
             }
         } else {
             new MySQLHelper(FragmentActivity.this, "music.db", null, 1).readExternalMusicFiles();
+            for (Music item : MySQLHelper.mList) {
+                Log.i("musicListMain", item.getArtist());
+            }
         }
     }
 

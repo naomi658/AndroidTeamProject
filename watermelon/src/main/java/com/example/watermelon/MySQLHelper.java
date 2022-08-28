@@ -24,6 +24,7 @@ public class MySQLHelper extends SQLiteOpenHelper {
     Cursor cursor;
     Music music;
 
+    static ArrayList<Music> mList; // 테이블 정보를 저장할 List
     private static String DB_PATH = "";
     private static String TABLE_NAME = "music.db";
     private static String mPath = DB_PATH + TABLE_NAME;
@@ -100,8 +101,8 @@ public class MySQLHelper extends SQLiteOpenHelper {
     }
 
     // music 테이블 정보 read
-    public List getTableData() {
-        List mList = new ArrayList(); // 테이블 정보를 저장할 List
+    public ArrayList getTableData() {
+        mList = new ArrayList<Music>();
 
         mdb = getReadableDatabase();
         cursor = mdb.rawQuery("SELECT * FROM music", null);
@@ -122,8 +123,8 @@ public class MySQLHelper extends SQLiteOpenHelper {
 
                     mList.add(music);
                 }
-                for (int i = 0; i < mList.size(); i++) {
-                    Log.i("musicList", mList.get(i).toString());
+                for (Music item : mList) {
+                    Log.i("musicList", item.getArtist());
                 }
             }
         } catch (Exception e) {
@@ -131,5 +132,15 @@ public class MySQLHelper extends SQLiteOpenHelper {
         }
         return mList;
     }
-
+    // Load Database
+//    private void initLoadMusicDatabase(){
+//        MySQLHelper databaseHelper = new MySQLHelper(getApplicationContext());
+//        databaseHelper.OpenDatabaseFile();
+//
+//        marketList = databaseHelper.getTableData();
+//        Log.e("test", String.valueOf(marketList.size()));
+//
+//        databaseHelper.close();
+//
+//    }
 }
