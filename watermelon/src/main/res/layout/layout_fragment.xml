@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="visible"
-            app:constraint_referenced_ids="tv_app_name, recycler_playlist, seekbar_playlist" />
+            app:constraint_referenced_ids="tv_app_name, btn_myInfo, recycler_playlist, seekbar_playlist" />
 
         <!--하단바-->
         <androidx.constraintlayout.widget.Group
@@ -61,7 +61,7 @@
             android:id="@+id/tv_app_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="2dp"
             android:fontFamily="monospace"
             android:text="@string/app_name"
             android:textColor="@color/purple_200"
@@ -73,6 +73,7 @@
 
         <!-- 내 정보 버튼 -->
         <ImageButton
+            android:clickable="true"
             android:id="@+id/btn_myInfo"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -82,7 +83,7 @@
             android:src="@drawable/watermelon"
             app:layout_constraintBottom_toBottomOf="@+id/tv_app_name"
             app:layout_constraintStart_toEndOf="@+id/tv_app_name"
-            app:layout_constraintTop_toTopOf="@+id/tv_app_name"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <!-- play 화면의 노래 제목 -->
         <TextView

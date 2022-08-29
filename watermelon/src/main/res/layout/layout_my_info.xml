@@ -51,7 +51,7 @@
             android:backgroundTint="@color/white"
             android:textColorHint="@color/gray"
             android:fontFamily="monospace"
-            android:inputType="textPassword"
+            android:inputType="numberPassword"
             android:textSize="30sp" />
 
     </LinearLayout>
@@ -71,7 +71,7 @@
             android:backgroundTint="@color/white"
             android:textColorHint="@color/gray"
             android:fontFamily="monospace"
-            android:inputType="textPassword"
+            android:inputType="numberPassword"
             android:textSize="30sp" />
     </LinearLayout>
 

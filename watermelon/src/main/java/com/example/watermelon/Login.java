@@ -88,8 +88,17 @@ public class Login extends AppCompatActivity {
                 mCursor = mdb.rawQuery("SELECT * FROM login WHERE id = '" + str_id + "' AND pw = " + str_pw + ";", null);
 
                 if (mCursor.moveToNext()) {
+                    //로그인 정보 담기
                     Log.i("ming", "SUCCESS");
+                    int _id = mCursor.getInt(0);
+                    String str_id1 = mCursor.getString(1);
+                    int int_pw1 = mCursor.getInt(2);
+                    String str_name = mCursor.getString(3);
                     Intent success = new Intent(Login.this, FragmentActivity.class);
+                    success.putExtra("_id", _id);
+                    success.putExtra("id", str_id1);
+                    success.putExtra("pw", int_pw1);
+                    success.putExtra("name",str_name);
                     startActivity(success);
                 } else {
                     Log.i("ming", "FAILURE");

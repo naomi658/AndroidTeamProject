@@ -1,9 +1,16 @@
 package com.example.watermelon;
 
+import static com.example.watermelon.MySQLHelper.mp3List;
+import static com.example.watermelon.ShowMyInfo.RQCODE_UPDATE;
+
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -27,23 +34,27 @@ public class FragmentActivity extends AppCompatActivity {
     private static final int REQCODE_PERMISSION_WRITE_EXTERNAL = 1;
     private static final int REQ_PLAY_SONG = 2;
     static LayoutFragmentBinding fbinding;
+    private static MyView mv;
 
+    MediaPlayer mp;
     final int VISIBLE = View.VISIBLE;
     final int INVISIBLE = View.INVISIBLE;
     final int GONE = View.GONE;
 
+    SQLiteDatabase mdb;
+    Cursor mCursor;
+    MySQLHelper mydb;
+    Intent i;
     // play/pause 클릭 상태
     // true: pause, false: play
     boolean play_flag = false;
 
     MyRecyclerAdapter musicAdapter;
-    //    static Bitmap imgResID;
-    Bitmap imgResID; // image Resource ID
-
+    // image Resource ID
+    Bitmap imgResID;
     private long backKeyPressedTime = 0;
-    // 첫 번째 뒤로가기 버튼을 누를때 표시
+    //첫 번째 뒤로가기 버튼을 누를때 표시
     private Toast toast;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +65,8 @@ public class FragmentActivity extends AppCompatActivity {
         SpannableStringBuilder ssb = new SpannableStringBuilder(fbinding.tvAppName.getText().toString());
         ssb.setSpan(new ForegroundColorSpan(Color.RED), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         fbinding.tvAppName.setText(ssb);
-
+        mydb = new MySQLHelper(this, "login.db", null, 1);
+        mdb = mydb.getReadableDatabase();
         checkPermission();
 
         // 뮤직파일 어댑터에 세팅
@@ -67,6 +79,15 @@ public class FragmentActivity extends AppCompatActivity {
         fbinding.playListImageView.setOnClickListener(lisList);
         // play 이미지 클릭시
         fbinding.imgPlay.setOnClickListener(lisImg);
+        // mypage 이미지(버튼) 클릭시
+        findViewById(R.id.btn_myInfo).setOnClickListener(info);
+
+
+        //로그인 후 로그인 정보 받기
+        i = getIntent();
+        //새롭게 추가 이미지뷰
+        mv = new MyView(fbinding.playListImageView);
+
     }
 
     // recyclerPlaylist Click Listener
@@ -78,8 +99,11 @@ public class FragmentActivity extends AppCompatActivity {
             fbinding.tvArtist.setText(artist);
             fbinding.imgCover.setImageBitmap(imgRes);
             fbinding.playListImageView.setImageResource(R.drawable.menu);
+
+            //ImageView Color Setting
+//            fbinding.playListImageView.setColorFilter(Color.parseColor("#FF3700B3"));
             imgResID = imgRes;
-//            new PlayMusicActivity().onPrepared(PlayMusicActivity.player);
+
             Log.i("pos", position + "\t" + imgRes);
         }
     };
@@ -90,9 +114,11 @@ public class FragmentActivity extends AppCompatActivity {
         public void onClick(View view) {
             if (fbinding.playerViewGroup.getVisibility() == VISIBLE) {
                 setVisibilities(VISIBLE, GONE, VISIBLE);
+                //새롭게 추가
                 fbinding.playListImageView.setImageBitmap(imgResID);
             } else {
                 setVisibilities(GONE, VISIBLE, VISIBLE);
+                //새롭게 추가
                 fbinding.playListImageView.setImageResource(R.drawable.menu);
             }
         }
@@ -120,6 +146,7 @@ public class FragmentActivity extends AppCompatActivity {
         }
     }
 
+
     // imgPlay Click Listener
     View.OnClickListener lisImg = new View.OnClickListener() {
         @Override
@@ -129,8 +156,10 @@ public class FragmentActivity extends AppCompatActivity {
 
                 if (play_flag) {
                     fbinding.imgPlay.setImageResource(R.drawable.pause);
+
                 } else {
                     fbinding.imgPlay.setImageResource(R.drawable.play);
+
                 }
             } catch (Exception e) {
                 ;
@@ -138,7 +167,13 @@ public class FragmentActivity extends AppCompatActivity {
         }
     };
 
-    // Main List 화면, 재생 중 화면, 하단바 visibilities
+    // Main List 화면과 재생 중 화면의 visible을 컨트롤하는 메소드
+    void setVisibilities(int list, int playerView) {
+        fbinding.listGroup.setVisibility(list);
+        fbinding.playerViewGroup.setVisibility(playerView);
+    }
+
+    // Main List 화면, 재생 중 화면, 하단바
     static public void setVisibilities(int list, int playerView, int bottom) {
         fbinding.listGroup.setVisibility(list);
         fbinding.playerViewGroup.setVisibility(playerView);
@@ -180,14 +215,74 @@ public class FragmentActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == REQCODE_PERMISSION_WRITE_EXTERNAL) {
-            if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                new MySQLHelper(FragmentActivity.this, "music.db", null, 1).readExternalMusicFiles();
+        try {
+            if (requestCode == REQCODE_PERMISSION_WRITE_EXTERNAL) {
+                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    new MySQLHelper(FragmentActivity.this, "music.db", null, 1).readExternalMusicFiles();
+                }
             }
+
+            if (requestCode == REQ_PLAY_SONG) {
+
+            }
+        } catch (Exception e) {
+            ;
         }
+    }
 
-        if (requestCode == REQ_PLAY_SONG) {
+    //마이페이지 버튼 클릭
+    View.OnClickListener info = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int _id = i.getIntExtra("_id", -1);
+            String str_id = i.getStringExtra("id");
+            int int_pw = i.getIntExtra("pw", -2);
+            String str_name = i.getStringExtra("name");
 
+            mCursor = mdb.rawQuery("SELECT * FROM login WHERE " +
+                    "id = '" + str_id + "' AND pw = " + int_pw + " AND name = '" + str_name + "';", null);
+            mCursor.moveToNext();
+
+            Intent i = new Intent(FragmentActivity.this, ShowMyInfo.class);
+            i.putExtra("_id", _id);
+            i.putExtra("id", str_id);
+            i.putExtra("pw", int_pw);
+            i.putExtra("name", str_name);
+
+            startActivityForResult(i, RQCODE_UPDATE);
+        }
+    };
+
+    // onActivityResult
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data != null) {
+            mCursor = mdb.rawQuery("SELECT * FROM login", null);
+
+            mCursor.moveToNext();
+
+            int _id = data.getIntExtra("_id", -1);
+            String str_id = data.getStringExtra("id");
+            int int_pw = data.getIntExtra("pw", -2);
+            String str_name = data.getStringExtra("name");
+
+            if (requestCode == RQCODE_UPDATE) {
+                i = getIntent();
+                Log.i("update", str_name);
+                Log.i("update", str_id);
+                Log.i("update", Integer.toString(int_pw));
+
+                mdb.execSQL("UPDATE login" +
+                        " SET id = '" + str_id + "'" +
+                        ", pw = " + int_pw + ", "
+                        + "name= '" + str_name +
+                        "' WHERE _id =" + _id + "; ");
+
+                mCursor.requery();
+
+            }
+            mCursor.requery();
         }
     }
 }
