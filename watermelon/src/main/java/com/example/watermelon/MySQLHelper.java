@@ -85,7 +85,7 @@ public class MySQLHelper extends SQLiteOpenHelper {
                 }
             };
 
-            // 외부 저장소의 기본 음악폴더에서 mp3 파일만을 배열에 저장
+            // 외부 저장소의 기본 음악폴더에서 mp3 파일만을 리스트에 저장
             mp3List = path.list(filter);
 
             getMusicTableData();

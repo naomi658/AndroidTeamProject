@@ -3,6 +3,9 @@
     package="com.example.watermelon">
     <!-- Internet Permission -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 플레이어 애플리케이션에서 화면이 어두워지는 것이나 프로세서의 절전 모드를 방지하기 위함 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <!-- SD 외장메모리 권한 설정 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

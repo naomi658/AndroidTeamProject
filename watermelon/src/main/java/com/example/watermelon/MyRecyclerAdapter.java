@@ -16,6 +16,7 @@ import java.util.List;
 public class MyRecyclerAdapter extends RecyclerView.Adapter<MyView> {
     List<Music> musics;
     Context context;
+    Music selectedMusic;
 
     // Click Event 구현하기 위한 인터페이스
     public interface OnItemClickListener {
@@ -55,6 +56,9 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyView> {
                     artist = viewHolder.getArtistTextView();
                     imgRes = viewHolder.getCoverImgView();
                 }
+
+                selectedMusic = MySQLHelper.mList.get(position);
+
                 itemClickListener.onItemClicked(position, title, artist, imgRes);
             }
         });
@@ -79,5 +83,10 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyView> {
     @Override
     public int getItemCount() {
         return musics.size();
+    }
+
+    // 선택한 아이템의 재생 총 길이
+    public int getSelectedPlaytime() {
+        return selectedMusic.getPlaytime();
     }
 }

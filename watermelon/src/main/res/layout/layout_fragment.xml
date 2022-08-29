@@ -5,7 +5,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:ignore="MissingConstraints">
 
         <!-- Play 중인 화면 Group -->
         <androidx.constraintlayout.widget.Group
@@ -29,7 +30,7 @@
             android:id="@+id/bottomBar_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
+            android:visibility="visible"
             app:constraint_referenced_ids="seekbar_playlist, play_list_image_view, tv_playing_time,
             tv_time_len, skip_prev_image_view, img_play, skip_next_image_view" />
 
@@ -69,6 +70,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 내 정보 버튼 -->
+        <ImageButton
+            android:id="@+id/btn_myInfo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/dark_gray"
+            android:scaleType="fitCenter"
+            android:src="@drawable/watermelon"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_app_name"
+            app:layout_constraintStart_toEndOf="@+id/tv_app_name"
+            app:layout_constraintTop_toTopOf="@+id/tv_app_name"/>
 
         <!-- play 화면의 노래 제목 -->
         <TextView
@@ -141,6 +155,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_app_name"/>
+
 
         <!-- play 화면의 seekBar -->
         <SeekBar
@@ -245,8 +260,7 @@
             android:src="@drawable/menu"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/player_view"
-            app:tint="@color/purple_700" />
+            app:layout_constraintTop_toTopOf="@id/player_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

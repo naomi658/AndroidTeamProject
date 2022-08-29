@@ -1,6 +1,5 @@
 package com.example.watermelon;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,15 +10,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class ShowMyInfo extends AppCompatActivity {
     SQLiteDatabase mdb;
     Cursor mCursor;
     MySQLHelper mydb;
 
-    EditText et_new_pw, et_new_pw_check;
+    EditText et_id, et_new_pw, et_new_pw_check, et_name;
     Button btn_setting_me;
-    static final int RQCODE_UPDATE = 2;
+    Intent i;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,69 +27,55 @@ public class ShowMyInfo extends AppCompatActivity {
         setContentView(R.layout.layout_my_info);
 
         mydb = new MySQLHelper(ShowMyInfo.this, "login.db", null, 1);
-        mdb = mydb.getReadableDatabase();
-        mCursor = mdb.rawQuery("SELECT * FROM login", null);
+        mdb = mydb.getWritableDatabase();
 
-        btn_setting_me = findViewById(R.id.btn_setting_me);
+        et_id = findViewById(R.id.et_id_me);
         et_new_pw = findViewById(R.id.et_pw_me);
         et_new_pw_check = findViewById(R.id.et_pwOk_me);
+        et_name = findViewById(R.id.et_name_me);
 
-        btn_setting_me.setOnClickListener(me);
+        btn_setting_me = findViewById(R.id.btn_setting_me);
+
+        btn_setting_me.setOnClickListener(settingOk);
+
+        i = getIntent();
+        //로그인했던정보 -> 수정된 정보도 받아와야 하므로 커서를 _id(변하지않는값)로 설정
+        int _id = i.getIntExtra("_id", -1);
+        mCursor = mdb.rawQuery("SELECT * FROM login WHERE _id='" + _id + "';", null);
+        mCursor.moveToNext();
+
+        //후 에딧텍스트에 설정해야하는 값은 커서의 id값 0123;
+        String str_id = mCursor.getString(1);
+        int int_pw = mCursor.getInt(2);
+        String str_name = mCursor.getString(3);
+
+        et_id.setText(str_id);
+        et_new_pw.setText(String.valueOf(int_pw));
+        et_name.setText(str_name);
     }
 
-    View.OnClickListener me = new View.OnClickListener() {
+    View.OnClickListener settingOk = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            try{
-                mCursor.moveToFirst();
-                int _id = mCursor.getInt(0);
-                String str_id = mCursor.getString(1);
+            String str_id = et_id.getText().toString();
+            String str_name = et_name.getText().toString();
+            int int_pw = Integer.parseInt(et_new_pw.getText().toString());
+            int int_pwOk = Integer.parseInt(et_new_pw_check.getText().toString());
 
-                new MySQLHelper(ShowMyInfo.this, "login.db", null, 1).getLogInTableData();
-                Log.i("log", MySQLHelper.logList.get(0).getUserName());
+            if (int_pw == int_pwOk) {
+                Log.i("update", str_name);
+                Log.i("update", str_id);
+                Log.i("update", Integer.toString(int_pw));
 
-
-                int int_pw = Integer.parseInt(et_new_pw.getText().toString());
-                int int_pw_check = Integer.parseInt(et_new_pw_check.getText().toString());
-                String str_name = mCursor.getString(3);
-
-                Intent i = new Intent(ShowMyInfo.this.getApplicationContext(), FragmentActivity.class);
-                i.putExtra("_id", _id);
-//            i.putExtra("id", str_id);
-
-                if (int_pw == int_pw_check) {
-                    i.putExtra("pw", Integer.toString(int_pw));
-                }
-
+                i.putExtra("id", str_id);
+                i.putExtra("pw", int_pw);
                 i.putExtra("name", str_name);
-                startActivityForResult(i, RQCODE_UPDATE);
-            } catch (Exception e){
-                ;
+                setResult(RESULT_OK, i);
+                finish();
+
+            } else {
+                Toast.makeText(ShowMyInfo.this, "비밀번호가 다릅니다.", Toast.LENGTH_SHORT).show();
             }
         }
     };
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        try{
-            if (resultCode == RESULT_OK && data != null) {
-
-                if (requestCode == RQCODE_UPDATE) {
-
-                    int _id = data.getIntExtra("_id", -1);
-                    String str_id = data.getStringExtra("id");
-                    int int_pw = data.getIntExtra("pw", -2);
-                    String str_name = data.getStringExtra("name");
-
-                    mdb.execSQL("UPDATE login SET id = '" + str_id + "', pw = '" + int_pw + "', " +
-                            "name= '" + str_name + "' WHERE _id =" + _id + "; ");
-                }
-            }
-            mCursor.requery();
-        } catch (Exception e){
-            ;
-        }
-    }
 }

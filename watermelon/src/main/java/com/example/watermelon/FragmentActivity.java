@@ -37,6 +37,13 @@ public class FragmentActivity extends AppCompatActivity {
     boolean play_flag = false;
 
     MyRecyclerAdapter musicAdapter;
+    //    static Bitmap imgResID;
+    Bitmap imgResID; // image Resource ID
+
+    private long backKeyPressedTime = 0;
+    // 첫 번째 뒤로가기 버튼을 누를때 표시
+    private Toast toast;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +77,9 @@ public class FragmentActivity extends AppCompatActivity {
             fbinding.tvTitle.setText(title);
             fbinding.tvArtist.setText(artist);
             fbinding.imgCover.setImageBitmap(imgRes);
+            fbinding.playListImageView.setImageResource(R.drawable.menu);
+            imgResID = imgRes;
+//            new PlayMusicActivity().onPrepared(PlayMusicActivity.player);
             Log.i("pos", position + "\t" + imgRes);
         }
     };
@@ -80,11 +90,35 @@ public class FragmentActivity extends AppCompatActivity {
         public void onClick(View view) {
             if (fbinding.playerViewGroup.getVisibility() == VISIBLE) {
                 setVisibilities(VISIBLE, GONE, VISIBLE);
+                fbinding.playListImageView.setImageBitmap(imgResID);
             } else {
                 setVisibilities(GONE, VISIBLE, VISIBLE);
+                fbinding.playListImageView.setImageResource(R.drawable.menu);
             }
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        if (fbinding.playerViewGroup.getVisibility() == VISIBLE) {
+            setVisibilities(VISIBLE, GONE, VISIBLE);
+            fbinding.playListImageView.setImageBitmap(imgResID);
+        } else {
+            if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+                backKeyPressedTime = System.currentTimeMillis();
+                toast = Toast.makeText(this, "\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
+                toast.show();
+                return;
+            }
+            // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후
+            // 마지막으로 뒤로가기 버튼을 눌렀던 시간이 2초가 지나지 않았으면 종료
+            // 현재 표시된 Toast 취소
+            if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+                finish();
+                toast.cancel();
+            }
+        }
+    }
 
     // imgPlay Click Listener
     View.OnClickListener lisImg = new View.OnClickListener() {
@@ -104,13 +138,7 @@ public class FragmentActivity extends AppCompatActivity {
         }
     };
 
-    // Main List 화면과 재생 중 화면의 visible을 컨트롤하는 메소드
-    void setVisibilities(int list, int playerView) {
-        fbinding.listGroup.setVisibility(list);
-        fbinding.playerViewGroup.setVisibility(playerView);
-    }
-
-    // Main List 화면, 재생 중 화면, 하단바
+    // Main List 화면, 재생 중 화면, 하단바 visibilities
     static public void setVisibilities(int list, int playerView, int bottom) {
         fbinding.listGroup.setVisibility(list);
         fbinding.playerViewGroup.setVisibility(playerView);
@@ -152,18 +180,14 @@ public class FragmentActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        try {
-            if (requestCode == REQCODE_PERMISSION_WRITE_EXTERNAL) {
-                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    new MySQLHelper(FragmentActivity.this, "music.db", null, 1).readExternalMusicFiles();
-                }
+        if (requestCode == REQCODE_PERMISSION_WRITE_EXTERNAL) {
+            if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                new MySQLHelper(FragmentActivity.this, "music.db", null, 1).readExternalMusicFiles();
             }
+        }
 
-            if(requestCode == REQ_PLAY_SONG){
+        if (requestCode == REQ_PLAY_SONG) {
 
-            }
-        } catch (Exception e) {
-            ;
         }
     }
 }
