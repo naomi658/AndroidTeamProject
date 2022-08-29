@@ -41,6 +41,7 @@ public class PlayMusicActivity extends AppCompatActivity implements MediaPlayer.
     }
 
     File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC); // 파일명
+    String strPath = String.valueOf(Uri.fromFile(path));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class PlayMusicActivity extends AppCompatActivity implements MediaPlayer.
         player = new MediaPlayer();
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
-            player.setDataSource(String.valueOf(Uri.fromFile(path)));
+            player.setDataSource(strPath);
             player.prepare();
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,4 +63,40 @@ public class PlayMusicActivity extends AppCompatActivity implements MediaPlayer.
             mp.start();
         }
     }
+
+    // 서비스 종료시
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        player.stop(); // play 중지
+        player.release(); // 객체 해제
+        player = null;
+    }
+
+    public void musicChange(String changePath){ // 음악 변경시 호출
+        player.reset();
+        strPath = changePath;
+        player = new MediaPlayer();
+
+        try{
+            player.reset();
+            player.setDataSource(changePath); // 바뀐 경로로 설정
+            player.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        player.start();
+    }
+    public void musicReplay() { player.start(); } // 음악 재실행
+    public void musicPause() { player.pause(); } // 음악 일시정지
+    public void musicStop() { player.stop(); } // 음악 정지
+    public boolean isPlaying(){ // 현재 재생 중인지 return
+        if(player != null)
+            return player.isPlaying();
+        else
+            return false;
+    }
+    public boolean isStart() { return isService; }
 }

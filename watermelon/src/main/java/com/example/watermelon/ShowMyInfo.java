@@ -98,6 +98,8 @@ public class ShowMyInfo extends AppCompatActivity {
 
                     mdb.execSQL("UPDATE login SET id = '" + str_id + "', pw = " + int_pw + ", " +
                             "name= '" + str_name + "' WHERE _id =" + _id + "; ");
+
+                    Toast.makeText(this, "Update Success!", Toast.LENGTH_SHORT).show();
                 }
             }
             mdb.notifyAll();

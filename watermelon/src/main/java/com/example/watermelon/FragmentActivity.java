@@ -82,12 +82,10 @@ public class FragmentActivity extends AppCompatActivity {
         // mypage 이미지(버튼) 클릭시
         findViewById(R.id.btn_myInfo).setOnClickListener(info);
 
-
         //로그인 후 로그인 정보 받기
         i = getIntent();
         //새롭게 추가 이미지뷰
         mv = new MyView(fbinding.playListImageView);
-
     }
 
     // recyclerPlaylist Click Listener
@@ -99,9 +97,6 @@ public class FragmentActivity extends AppCompatActivity {
             fbinding.tvArtist.setText(artist);
             fbinding.imgCover.setImageBitmap(imgRes);
             fbinding.playListImageView.setImageResource(R.drawable.menu);
-
-            //ImageView Color Setting
-//            fbinding.playListImageView.setColorFilter(Color.parseColor("#FF3700B3"));
             imgResID = imgRes;
 
             Log.i("pos", position + "\t" + imgRes);
@@ -146,17 +141,16 @@ public class FragmentActivity extends AppCompatActivity {
         }
     }
 
-
     // imgPlay Click Listener
     View.OnClickListener lisImg = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             try {
                 play_flag = !play_flag;
+                PlayMusicActivity playMusic = new PlayMusicActivity();
 
                 if (play_flag) {
                     fbinding.imgPlay.setImageResource(R.drawable.pause);
-
                 } else {
                     fbinding.imgPlay.setImageResource(R.drawable.play);
 
