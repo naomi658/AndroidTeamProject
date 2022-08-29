@@ -98,5 +98,5 @@ public class PlayMusicActivity extends AppCompatActivity implements MediaPlayer.
         else
             return false;
     }
-    public boolean isStart() { return isService; }
+//    public boolean isStart() { return isService; }
 }
