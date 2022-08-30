@@ -1,6 +1,5 @@
 package com.example.watermelon;
 
-import static com.example.watermelon.MySQLHelper.mp3List;
 import static com.example.watermelon.ShowMyInfo.RQCODE_UPDATE;
 
 import android.Manifest;
@@ -17,6 +16,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,7 +36,7 @@ public class FragmentActivity extends AppCompatActivity {
     static LayoutFragmentBinding fbinding;
     private static MyView mv;
 
-    MediaPlayer mp;
+    MediaPlayer mediaPlayer;
     final int VISIBLE = View.VISIBLE;
     final int INVISIBLE = View.INVISIBLE;
     final int GONE = View.GONE;
@@ -55,6 +55,36 @@ public class FragmentActivity extends AppCompatActivity {
     private long backKeyPressedTime = 0;
     //첫 번째 뒤로가기 버튼을 누를때 표시
     private Toast toast;
+
+    int[] musicRes = {
+            R.raw.wellerman, R.raw.thatthat, R.raw.offmyface,
+            R.raw.lovedive, R.raw.eight, R.raw.forever1
+    }; // 앱 내부 음악 파일
+
+    String[] strFileName = {
+            "wellerman.mp3", "thathat.mp3", "offmyface.mp3",
+            "lovedive.mp3", "eight.mp3", "forever1.mp3"
+    };
+
+    int playtime; // 재생시간
+    int musicPos; // 재생중인 음악의 position
+    boolean isPlaying = false; // 재생중인지 확인할 변수
+
+    // 스레드
+    class MyThread extends Thread {
+        @Override
+        public void run() { // 쓰레드가 시작되면 콜백되는 메서드
+            // 씨크바 막대기 조금씩 움직이기 (노래 끝날 때까지 반복)
+            while (isPlaying) {
+                fbinding.seekbarPlaylist.setProgress(mediaPlayer.getCurrentPosition());
+                try {
+                    sleep(playtime/1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,21 +112,55 @@ public class FragmentActivity extends AppCompatActivity {
         // mypage 이미지(버튼) 클릭시
         findViewById(R.id.btn_myInfo).setOnClickListener(info);
 
+
         //로그인 후 로그인 정보 받기
         i = getIntent();
-        //새롭게 추가 이미지뷰
+        //새롭게 추가 이미지뷰뷰
         mv = new MyView(fbinding.playListImageView);
+
     }
 
-    // recyclerPlaylist Click Listener
+    // 음악 실행
+    public void musicStart(int position, String fileName) {
+        isPlaying = !isPlaying;
+        musicPos = position;
+
+        // 재생 중인 플레이어가 없다면
+        if (mediaPlayer == null) {
+            for (int i = 0; i < strFileName.length; i++) {
+                if (fileName.compareTo(strFileName[i]) == 0) {
+                    mediaPlayer = MediaPlayer.create(getApplicationContext(), musicRes[i]);
+                }
+            }
+
+            playtime = mediaPlayer.getDuration(); // 노래의 재생시간(miliSecond)
+            fbinding.seekbarPlaylist.setMax(playtime);// 씨크바의 최대 범위를 노래의 재생시간으로 설정
+            play_flag = !play_flag;
+            mediaPlayer.start();
+            new MyThread().start();
+
+            if(play_flag){
+                fbinding.imgPlay.setImageResource(R.drawable.pause);
+            } else{
+                fbinding.imgPlay.setImageResource(R.drawable.play);
+            }
+        }
+    }
+
+    // recyclerPlaylist Item Click Listener
     MyRecyclerAdapter.OnItemClickListener recyclerListener = new MyRecyclerAdapter.OnItemClickListener() {
         @Override
-        public void onItemClicked(int position, String title, String artist, Bitmap imgRes) {
+        public void onItemClicked(int position, String title, String artist, Bitmap imgRes, String fileName) {
+            musicStart(position, fileName);
+
+            if(musicPos)
+
             setVisibilities(GONE, VISIBLE, VISIBLE);
             fbinding.tvTitle.setText(title);
             fbinding.tvArtist.setText(artist);
             fbinding.imgCover.setImageBitmap(imgRes);
             fbinding.playListImageView.setImageResource(R.drawable.menu);
+
             imgResID = imgRes;
 
             Log.i("pos", position + "\t" + imgRes);
@@ -109,11 +173,9 @@ public class FragmentActivity extends AppCompatActivity {
         public void onClick(View view) {
             if (fbinding.playerViewGroup.getVisibility() == VISIBLE) {
                 setVisibilities(VISIBLE, GONE, VISIBLE);
-                //새롭게 추가
                 fbinding.playListImageView.setImageBitmap(imgResID);
             } else {
                 setVisibilities(GONE, VISIBLE, VISIBLE);
-                //새롭게 추가
                 fbinding.playListImageView.setImageResource(R.drawable.menu);
             }
         }
@@ -140,6 +202,14 @@ public class FragmentActivity extends AppCompatActivity {
             }
         }
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mediaPlayer.stop(); // play 중지
+        mediaPlayer.release(); // 객체 해제
+        mediaPlayer = null;
+    }
 
     // imgPlay Click Listener
     View.OnClickListener lisImg = new View.OnClickListener() {
@@ -147,25 +217,25 @@ public class FragmentActivity extends AppCompatActivity {
         public void onClick(View view) {
             try {
                 play_flag = !play_flag;
-                PlayMusicActivity playMusic = new PlayMusicActivity();
 
-                if (play_flag) {
-                    fbinding.imgPlay.setImageResource(R.drawable.pause);
-                } else {
-                    fbinding.imgPlay.setImageResource(R.drawable.play);
-
+                if(mediaPlayer != null){
+                    if (play_flag) {
+                        fbinding.imgPlay.setImageResource(R.drawable.pause);
+                    } else {
+                        fbinding.imgPlay.setImageResource(R.drawable.play);
+                    }
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.pause();
+                    } else {
+                        mediaPlayer.start();
+                    }
                 }
+
             } catch (Exception e) {
                 ;
             }
         }
     };
-
-    // Main List 화면과 재생 중 화면의 visible을 컨트롤하는 메소드
-    void setVisibilities(int list, int playerView) {
-        fbinding.listGroup.setVisibility(list);
-        fbinding.playerViewGroup.setVisibility(playerView);
-    }
 
     // Main List 화면, 재생 중 화면, 하단바
     static public void setVisibilities(int list, int playerView, int bottom) {

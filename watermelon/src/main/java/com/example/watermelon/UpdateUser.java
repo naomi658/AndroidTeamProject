@@ -24,13 +24,13 @@ public class UpdateUser extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_success_login);
+        setContentView(R.layout.layout_my_info);
 
         mydb = new MySQLHelper(this, "login.db", null, 1);
         mdb = mydb.getReadableDatabase();
         i = getIntent();
 
-        btn_me = findViewById(R.id.btn_me);
+        btn_me = findViewById(R.id.btn_setting_me);
 
         btn_me.setOnClickListener(me);
     }

@@ -18,9 +18,11 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyView> {
     Context context;
     Music selectedMusic;
 
+    PlayMusicActivity musicService = new PlayMusicActivity();
+
     // Click Event 구현하기 위한 인터페이스
     public interface OnItemClickListener {
-        void onItemClicked(int position, String title, String artist, Bitmap imgRes);
+        void onItemClicked(int position, String title, String artist, Bitmap imgRes, String fileName);
     }
 
     // OnItemClickListener 참조변수 선언
@@ -48,6 +50,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyView> {
                 String title = "";
                 String artist = "";
                 Bitmap imgRes = null;
+                String fileName = "";
 
                 int position = viewHolder.getAdapterPosition();
 
@@ -55,11 +58,12 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyView> {
                     title = viewHolder.getTitleTextView();
                     artist = viewHolder.getArtistTextView();
                     imgRes = viewHolder.getCoverImgView();
+                    fileName = MySQLHelper.mList.get(position).getFilename();
                 }
 
                 selectedMusic = MySQLHelper.mList.get(position);
 
-                itemClickListener.onItemClicked(position, title, artist, imgRes);
+                itemClickListener.onItemClicked(position, title, artist, imgRes, fileName);
             }
         });
 
