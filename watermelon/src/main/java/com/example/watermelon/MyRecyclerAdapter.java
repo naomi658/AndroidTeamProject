@@ -88,9 +88,4 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyView> {
     public int getItemCount() {
         return musics.size();
     }
-
-    // 선택한 아이템의 재생 총 길이
-    public int getSelectedPlaytime() {
-        return selectedMusic.getPlaytime();
-    }
 }

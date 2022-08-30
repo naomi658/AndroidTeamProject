@@ -62,7 +62,7 @@ public class FragmentActivity extends AppCompatActivity {
     }; // 앱 내부 음악 파일
 
     String[] strFileName = {
-            "wellerman.mp3", "thathat.mp3", "offmyface.mp3",
+            "wellerman.mp3", "thatthat.mp3", "offmyface.mp3",
             "lovedive.mp3", "eight.mp3", "forever1.mp3"
     };
 
@@ -74,9 +74,11 @@ public class FragmentActivity extends AppCompatActivity {
     class MyThread extends Thread {
         @Override
         public void run() { // 쓰레드가 시작되면 콜백되는 메서드
+            if(mediaPlayer == null) { return; } // 음악 재생 중이 아니라면 그냥 리턴
             // 씨크바 막대기 조금씩 움직이기 (노래 끝날 때까지 반복)
             while (isPlaying) {
                 fbinding.seekbarPlaylist.setProgress(mediaPlayer.getCurrentPosition());
+
                 try {
                     sleep(playtime/1000);
                 } catch (InterruptedException e) {
@@ -119,25 +121,30 @@ public class FragmentActivity extends AppCompatActivity {
         mv = new MyView(fbinding.playListImageView);
 
     }
+    MyThread thread;
 
     // 음악 실행
     public void musicStart(int position, String fileName) {
         isPlaying = !isPlaying;
         musicPos = position;
+        int currentPos = 0;
 
         // 재생 중인 플레이어가 없다면
         if (mediaPlayer == null) {
             for (int i = 0; i < strFileName.length; i++) {
                 if (fileName.compareTo(strFileName[i]) == 0) {
-                    mediaPlayer = MediaPlayer.create(getApplicationContext(), musicRes[i]);
+                    currentPos = i;
                 }
             }
+            mediaPlayer = MediaPlayer.create(getApplicationContext(), musicRes[currentPos]);
 
             playtime = mediaPlayer.getDuration(); // 노래의 재생시간(miliSecond)
             fbinding.seekbarPlaylist.setMax(playtime);// 씨크바의 최대 범위를 노래의 재생시간으로 설정
             play_flag = !play_flag;
             mediaPlayer.start();
-            new MyThread().start();
+
+            thread = new MyThread();
+            thread.start();
 
             if(play_flag){
                 fbinding.imgPlay.setImageResource(R.drawable.pause);
@@ -151,9 +158,19 @@ public class FragmentActivity extends AppCompatActivity {
     MyRecyclerAdapter.OnItemClickListener recyclerListener = new MyRecyclerAdapter.OnItemClickListener() {
         @Override
         public void onItemClicked(int position, String title, String artist, Bitmap imgRes, String fileName) {
-            musicStart(position, fileName);
 
-            if(musicPos)
+            if(mediaPlayer != null){
+                if(musicPos != position){
+                    mediaPlayer.stop();
+                    mediaPlayer = null;
+                    thread = new MyThread();
+                    musicStart(position, fileName);
+                } else{
+                    mediaPlayer.start();
+                }
+            } else{
+                musicStart(position, fileName);
+            }
 
             setVisibilities(GONE, VISIBLE, VISIBLE);
             fbinding.tvTitle.setText(title);
